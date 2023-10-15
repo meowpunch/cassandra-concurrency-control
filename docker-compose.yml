@@ -1,0 +1,109 @@
+version: '3'
+services:
+  cassandra-dc1-node1:
+    container_name: cassandra-dc1-node1
+    image: cassandra:latest
+    environment:
+      - CASSANDRA_SEEDS=cassandra-dc1-node1
+      - CASSANDRA_CLUSTER_NAME=TestCluster
+      - CASSANDRA_ENDPOINT_SNITCH=GossipingPropertyFileSnitch
+      - CASSANDRA_DC=dc1
+      - MAX_HEAP_SIZE=512M
+      - HEAP_NEWSIZE=100M
+    ports:
+      - "9042:9042"
+    healthcheck:
+      test: [ "CMD-SHELL", "nodetool status" ]
+      interval: 20s
+      timeout: 10s
+      retries: 20
+
+  cassandra-dc1-node2:
+    container_name: cassandra-dc1-node2
+    image: cassandra:latest
+    environment:
+      - CASSANDRA_SEEDS=cassandra-dc1-node1, cassandra-dc1-node2
+      - CASSANDRA_CLUSTER_NAME=TestCluster
+      - CASSANDRA_ENDPOINT_SNITCH=GossipingPropertyFileSnitch
+      - CASSANDRA_DC=dc1
+      - MAX_HEAP_SIZE=512M
+      - HEAP_NEWSIZE=100M
+    healthcheck:
+      test: [ "CMD-SHELL", "nodetool status" ]
+      interval: 20s
+      timeout: 10s
+      retries: 20
+    depends_on:
+      cassandra-dc1-node1:
+        condition: service_healthy
+
+  cassandra-dc1-node3:
+    container_name: cassandra-dc1-node3
+    image: cassandra:latest
+    environment:
+      - CASSANDRA_SEEDS=cassandra-dc1-node1, cassandra-dc1-node2
+      - CASSANDRA_CLUSTER_NAME=TestCluster
+      - CASSANDRA_ENDPOINT_SNITCH=GossipingPropertyFileSnitch
+      - CASSANDRA_DC=dc1
+      - MAX_HEAP_SIZE=512M
+      - HEAP_NEWSIZE=100M
+    healthcheck:
+      test: [ "CMD-SHELL", "nodetool status" ]
+      interval: 20s
+      timeout: 10s
+      retries: 20
+    depends_on:
+      cassandra-dc1-node2:
+        condition: service_healthy
+
+  cassandra-dc2-node1:
+    container_name: cassandra-dc2-node1
+    image: cassandra:latest
+    environment:
+      - CASSANDRA_SEEDS=cassandra-dc1-node1, cassandra-dc1-node2, cassandra-dc2-node1
+      - CASSANDRA_CLUSTER_NAME=TestCluster
+      - CASSANDRA_ENDPOINT_SNITCH=GossipingPropertyFileSnitch
+      - CASSANDRA_DC=dc2
+      - MAX_HEAP_SIZE=512M
+      - HEAP_NEWSIZE=100M
+    healthcheck:
+      test: [ "CMD-SHELL", "nodetool status" ]
+      interval: 20s
+      timeout: 10s
+      retries: 20
+    depends_on:
+      cassandra-dc1-node3:
+        condition: service_healthy
+
+  cassandra-dc2-node2:
+    container_name: cassandra-dc2-node2
+    image: cassandra:latest
+    environment:
+      - CASSANDRA_SEEDS=cassandra-dc1-node1, cassandra-dc1-node2, cassandra-dc2-node1, cassandra-dc2-node2
+      - CASSANDRA_CLUSTER_NAME=TestCluster
+      - CASSANDRA_ENDPOINT_SNITCH=GossipingPropertyFileSnitch
+      - CASSANDRA_DC=dc2
+      - MAX_HEAP_SIZE=512M
+      - HEAP_NEWSIZE=100M
+    healthcheck:
+      test: [ "CMD-SHELL", "nodetool status" ]
+      interval: 20s
+      timeout: 10s
+      retries: 20
+    depends_on:
+      cassandra-dc2-node1:
+        condition: service_healthy
+
+  cassandra-dc2-node3:
+    container_name: cassandra-dc2-node3
+    image: cassandra:latest
+    environment:
+      - CASSANDRA_SEEDS=cassandra-dc1-node1, cassandra-dc1-node2, cassandra-dc2-node1, cassandra-dc2-node2
+      - CASSANDRA_CLUSTER_NAME=TestCluster
+      - CASSANDRA_ENDPOINT_SNITCH=GossipingPropertyFileSnitch
+      - CASSANDRA_DC=dc2
+      - MAX_HEAP_SIZE=512M
+      - HEAP_NEWSIZE=100M
+    depends_on:
+      cassandra-dc2-node2:
+        condition: service_healthy
