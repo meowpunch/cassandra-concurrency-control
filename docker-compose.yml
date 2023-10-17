@@ -28,6 +28,8 @@ services:
       - CASSANDRA_DC=dc1
       - MAX_HEAP_SIZE=512M
       - HEAP_NEWSIZE=100M
+    ports:
+      - "9043:9042"
     healthcheck:
       test: [ "CMD-SHELL", "nodetool status" ]
       interval: 20s
@@ -47,6 +49,8 @@ services:
       - CASSANDRA_DC=dc1
       - MAX_HEAP_SIZE=512M
       - HEAP_NEWSIZE=100M
+    ports:
+      - "9044:9042"
     healthcheck:
       test: [ "CMD-SHELL", "nodetool status" ]
       interval: 20s
@@ -66,6 +70,8 @@ services:
       - CASSANDRA_DC=dc2
       - MAX_HEAP_SIZE=512M
       - HEAP_NEWSIZE=100M
+    ports:
+      - "9045:9042"
     healthcheck:
       test: [ "CMD-SHELL", "nodetool status" ]
       interval: 20s
@@ -85,6 +91,8 @@ services:
       - CASSANDRA_DC=dc2
       - MAX_HEAP_SIZE=512M
       - HEAP_NEWSIZE=100M
+    ports:
+      - "9046:9042"
     healthcheck:
       test: [ "CMD-SHELL", "nodetool status" ]
       interval: 20s
@@ -104,6 +112,8 @@ services:
       - CASSANDRA_DC=dc2
       - MAX_HEAP_SIZE=512M
       - HEAP_NEWSIZE=100M
+    ports:
+      - "9047:9042"
     depends_on:
       cassandra-dc2-node2:
         condition: service_healthy
